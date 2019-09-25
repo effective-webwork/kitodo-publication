@@ -106,11 +106,9 @@ class DocumentTransferManager
         $internalFormat->setDateIssued($dateIssued);
 
         $exporter->setXML($internalFormat->getXml());
-
-        // Set the document creator
-        $slub = new \EWW\Dpf\Helper\Slub($document->getSlubInfoData());
-        $slub->setDocumentCreator($document->getCreator());
-        $exporter->setSlubInfo($slub->getSlubXml());
+//        $slub = new \EWW\Dpf\Helper\Slub($document->getSlubInfoData());
+//        $slub->setDocumentCreator($document->getCreator());
+//        $exporter->setSlubInfo($document->getSlubInfoData());
 
         $exporter->setObjId($document->getObjectIdentifier());
 
@@ -178,10 +176,9 @@ class DocumentTransferManager
 
         $exporter->setXML($internalFormat->getXml());
 
-        // Set the document creator
-        $slub = new \EWW\Dpf\Helper\Slub($document->getSlubInfoData());
-        $slub->setDocumentCreator($document->getCreator());
-        $exporter->setSlubInfo($slub->getSlubXml());
+//        $slub = new \EWW\Dpf\Helper\Slub($document->getSlubInfoData());
+//        $slub->setDocumentCreator($document->getCreator());
+//        $exporter->setSlubInfo($document->getSlubInfoData());
 
         $exporter->setObjId($document->getObjectIdentifier());
 
