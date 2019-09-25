@@ -255,6 +255,49 @@ class Client extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
     protected $suggestionFlashmessage = '';
 
     /**
+     * fileXpath
+     *
+     * @var string
+     */
+    protected $fileXpath = '';
+
+    /**
+     * stateXpath
+     *
+     * @var string
+     */
+    protected $stateXpath = '';
+
+    /**
+     * typeXpath
+     *
+     * @var string
+     */
+    protected $typeXpath = '';
+
+    /**
+     * typeXpathInput
+     *
+     * @var string
+     */
+    protected $typeXpathInput = '';
+
+    /**
+     * dateXpath
+     *
+     * @var string
+     */
+    protected $dateXpath = '';
+
+    /**
+     * urnXpath
+     *
+     * @var string
+     */
+    protected $urnXpath = '';
+
+
+    /**
      * Returns the project
      *
      * @return string $project
@@ -953,6 +996,105 @@ class Client extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
     {
         $this->suggestionFlashmessage = $suggestionFlashmessage;
     }
+
+
+    /**
+     * @return string
+     */
+    public function getFileXpath(): string
+    {
+        return $this->fileXpath;
+    }
+
+    /**
+     * @param string $fileXpath
+     */
+    public function setFileXpath(string $fileXpath)
+    {
+        $this->fileXpath = $fileXpath;
+    }
+
+    /**
+     * @return string
+     */
+    public function getStateXpath(): string
+    {
+        return $this->stateXpath;
+    }
+
+    /**
+     * @param string $stateXpath
+     */
+    public function setStateXpath(string $stateXpath)
+    {
+        $this->stateXpath = $stateXpath;
+    }
+
+    /**
+     * @return string
+     */
+    public function getTypeXpath(): string
+    {
+        return $this->typeXpath;
+    }
+
+    /**
+     * @param string $typeXpath
+     */
+    public function setTypeXpath(string $typeXpath)
+    {
+        $this->typeXpath = $typeXpath;
+    }
+
+    /**
+     * @return string
+     */
+    public function getTypeXpathInput(): string
+    {
+        return $this->typeXpathInput;
+    }
+
+    /**
+     * @param string $typeXpathInput
+     */
+    public function setTypeXpathInput(string $typeXpathInput)
+    {
+        $this->typeXpathInput = $typeXpathInput;
+    }
+
+    /**
+     * @return string
+     */
+    public function getDateXpath(): string
+    {
+        return $this->dateXpath;
+    }
+
+    /**
+     * @param string $dateXpath
+     */
+    public function setDateXpath(string $dateXpath)
+    {
+        $this->dateXpath = $dateXpath;
+    }
+
+    /**
+     * @return string
+     */
+    public function getUrnXpath(): string
+    {
+        return $this->urnXpath;
+    }
+
+    /**
+     * @param string $urnXpath
+     */
+    public function setUrnXpath(string $urnXpath)
+    {
+        $this->urnXpath = $urnXpath;
+    }
+
+
 
 
 }
