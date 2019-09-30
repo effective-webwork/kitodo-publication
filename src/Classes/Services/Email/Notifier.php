@@ -197,9 +197,8 @@ class Notifier
         try {
             $client = $this->clientRepository->findAll()->current();
             $clientAdminEmail = $client->getAdminEmail();
-            $mods = new \EWW\Dpf\Helper\Mods($document->getXmlData());
-            $slub = new \EWW\Dpf\Helper\Slub($document->getSlubInfoData());
-            $submitterEmail = $slub->getSubmitterEmail();
+            $internalFormat = new \EWW\Dpf\Helper\InternalFormat($document->getXmlData());
+            $submitterEmail = $internalFormat->getSubmitterEmail();
             $documentType = $this->documentTypeRepository->findOneByUid($document->getDocumentType());
             $authors = $document->getAuthors();
 
@@ -263,9 +262,9 @@ class Notifier
         try {
             $client = $this->clientRepository->findAll()->current();
             $clientAdminEmail = $client->getAdminEmail();
-            $mods = new \EWW\Dpf\Helper\Mods($document->getXmlData());
-            $slub = new \EWW\Dpf\Helper\Slub($document->getSlubInfoData());
-            $submitterEmail = $slub->getSubmitterEmail();
+            $internalFormat = new \EWW\Dpf\Helper\InternalFormat($document->getXmlData());
+
+            $submitterEmail = $internalFormat->getSubmitterEmail();
             $documentType = $this->documentTypeRepository->findOneByUid($document->getDocumentType());
 
             $args = $this->getMailMarkerArray($document, $client, $documentType, $slub, $mods);
