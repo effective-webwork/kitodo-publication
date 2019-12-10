@@ -228,8 +228,7 @@ class DocumentTransferManager
             $internalFormat = new \EWW\Dpf\Helper\InternalFormat($inputTransformedXML);
 
             $title = $internalFormat->getTitle();
-            $authors = '';
-
+            $authors = $internalFormat->getAuthors();
 
             $documentTypeName = $internalFormat->getDocumentType();
             $documentType     = $this->documentTypeRepository->findOneByName($documentTypeName);
@@ -267,9 +266,9 @@ class DocumentTransferManager
             $document->setXmlData($inputTransformedXML);
             $document->setSlubInfoData($inputTransformedXML);
 
-            $document->setDateIssued($mods->getDateIssued());
+            $document->setDateIssued($internalFormat->getDateIssued());
 
-            $document->setProcessNumber($slub->getProcessNumber());
+            $document->setProcessNumber($internalFormat->getProcessNumber());
 
             $document->setCreator($slub->getDocumentCreator());
 
@@ -278,7 +277,7 @@ class DocumentTransferManager
             $this->documentRepository->add($document);
             $this->persistenceManager->persistAll();
 
-            foreach ($mets->getFiles() as $attachment) {
+            foreach ($internalFormat->getFiles() as $attachment) {
 
                 $file = $this->objectManager->get(File::class);
                 $file->setContentType($attachment['mimetype']);
