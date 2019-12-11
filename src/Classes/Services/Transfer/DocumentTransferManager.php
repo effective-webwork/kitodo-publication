@@ -99,8 +99,6 @@ class DocumentTransferManager
 
         $internalFormat = new \EWW\Dpf\Helper\InternalFormat($document->getXmlData());
 
-//        $mods = new \EWW\Dpf\Helper\Mods($document->getXmlData());
-
         // Set current date as publication date
         $dateIssued = (new \DateTime)->format(\DateTime::ISO8601);
         $internalFormat->setDateIssued($dateIssued);
@@ -178,7 +176,6 @@ class DocumentTransferManager
 
         $exporter->setFileData($fileData);
 
-//        $mods = new \EWW\Dpf\Helper\Mods($document->getXmlData());
         $internalFormat = new \EWW\Dpf\Helper\InternalFormat($document->getXmlData());
 
         $exporter->setXML($internalFormat->getXml());
