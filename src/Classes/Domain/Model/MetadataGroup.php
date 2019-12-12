@@ -241,8 +241,6 @@ class MetadataGroup extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity imple
      */
     protected function relativeMapping($mapping)
     {
-        $modsRegExp = "/^\/?(mods:mods|slub:info)/";
-        $mapping    = preg_replace($modsRegExp, "", $mapping);
         return trim($mapping, " /");
     }
 
