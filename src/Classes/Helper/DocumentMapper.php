@@ -336,16 +336,20 @@ class DocumentMapper
         $exporter->buildXmlFromForm($documentData);
 
         $internalXml = $exporter->getXmlData();
-        $document->setXmlData($internalXml);
+        $internalFormat = new \EWW\Dpf\Helper\InternalFormat($internalXml);
+
+        // set static xml
+        $internalFormat->setDocumentType($documentType->getName());
+        $internalFormat->setProcessNumber($processNumber);
+
+        $document->setXmlData($internalFormat->getXml());
 
         $document->setSlubInfoData($exporter->getTransformedOutputXML($document));
-        $internalFormat = new \EWW\Dpf\Helper\InternalFormat($internalXml);
 
         $document->setTitle($internalFormat->getTitle());
         $document->setEmbargoDate($formMetaData['embargo']);
         $document->setAuthors($internalFormat->getAuthors());
         $document->setDateIssued($internalFormat->getDateIssued());
-
 
         // slub:info
 //        $slubInfoData['documentUid'] = $documentForm->getDocumentUid();
