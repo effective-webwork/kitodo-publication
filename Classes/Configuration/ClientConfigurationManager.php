@@ -407,6 +407,14 @@ class ClientConfigurationManager implements SingletonInterface
         return $settings['universityCollection'];
     }
 
+    public function getMandatoryPrimaryUrnCollections()
+    {
+        $settings = $this->getTypoScriptSettings();
+        $mandatoryPrimaryUrnCollectionsConfig =  $settings["mandatoryPrimaryUrnCollections"];
+        $mandatoryPrimaryUrnCollections = explode(",", $mandatoryPrimaryUrnCollectionsConfig);
+        return array_filter($mandatoryPrimaryUrnCollections, 'strlen');
+    }
+
     public function isAlwaysSetDateIssued()
     {
         $settings = $this->getTypoScriptSettings();
@@ -534,6 +542,14 @@ class ClientConfigurationManager implements SingletonInterface
         $fisCollections = explode(",", $fisCollectionsConfig);
         return array_filter($fisCollections, 'strlen');
     }
+
+    public function get()
+    {
+        $fisCollectionsConfig =  $this->getSetting("fisCollections");
+        $fisCollections = explode(",", $fisCollectionsConfig);
+        return array_filter($fisCollections, 'strlen');
+    }
+
 
     public function getNoReplyAddress()
     {

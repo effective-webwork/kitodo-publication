@@ -73,6 +73,9 @@ plugin.tx_dpf {
         # cat=plugin.tx_dpf/link; type=string; label=University collection value (Backoffice)
         universityCollection = epflicht
 
+        # cat=plugin.tx_dpf/link; type=string; label=Mandatory primary urn collections (comma seperated list of collection values)
+        mandatoryPrimaryUrnCollections = fulltext
+
         # cat=plugin.tx_dpf/deactivatePrimaryFileMandatoryCheck; type=string; label=Deactivate the primary file mandatory check.
         deactivatePrimaryFileMandatoryCheck =
 

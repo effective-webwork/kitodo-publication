@@ -1,13 +1,16 @@
 <?php
 namespace EWW\Dpf\Services\Document;
 
+use EWW\Dpf\Configuration\ClientConfigurationManager;
 use EWW\Dpf\Controller\AbstractController;
 use EWW\Dpf\Domain\Model\Bookmark;
 use EWW\Dpf\Domain\Model\Document;
 use EWW\Dpf\Domain\Model\FrontendUser;
 use EWW\Dpf\Domain\Workflow\DocumentWorkflow;
+use EWW\Dpf\Services\Api\InternalFormat;
 use EWW\Dpf\Services\Email\Notifier;
 use EWW\Dpf\Services\Identifier\Identifier;
+use EWW\Dpf\Services\Identifier\Urn;
 use Exception;
 
 class DocumentManager
@@ -252,8 +255,13 @@ class DocumentManager
             $updateResult = $document->getDocumentIdentifier();
 
         } elseif ($workflowTransition == DocumentWorkflow::TRANSITION_RELEASE_PUBLISH) {
-
             // Fedora ingest
+
+            $this->initPrimaryUrnIfEligible($document);
+
+            var_dump($document->getPrimaryUrn());
+            die();
+
             if ($ingestedDocument = $this->documentStorage->ingest($document)) {
                 // After ingest all related bookmarks need an update of the identifier into an fedora object identifier.
                 if ($ingestedDocument instanceof Document) {
@@ -640,5 +648,39 @@ class DocumentManager
 
         return $users;
     }
-}
 
+    /**
+     * @param Document $document
+     * @return void
+     * @throws Exception
+     */
+    protected function initPrimaryUrnIfEligible($document) {
+        // Set a primary URN only if one has not been set before, and only for specific collections.
+        $primaryUrn = $document->getPrimaryUrn();
+        if (empty($primaryUrn)) {
+            $internalFormat = new InternalFormat($document->getXmlData());
+            $collections = $internalFormat->getCollections();
+
+            $clientConfigurationManager = $this->objectManager->get(ClientConfigurationManager::class);
+            $mandatoryPrimaryUrnCollections = $clientConfigurationManager->getMandatoryPrimaryUrnCollections();
+
+            $common = array_intersect(
+                array_map('strtolower', $mandatoryPrimaryUrnCollections),
+                array_map('strtolower', $collections)
+            );
+
+            if (!empty($common)) {
+                $urnService = $this->objectManager->get(Urn::class);
+
+                $processNumber = $document->getProcessNumber();
+                $urn = $urnService->getUrn($processNumber);
+
+                $internalFormat->setPrimaryUrn($urn);
+
+                $document->setXmlData($internalFormat->getXml());
+            }
+        }
+
+    }
+
+}
