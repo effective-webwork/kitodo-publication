@@ -20,6 +20,7 @@ use EWW\Dpf\Domain\Workflow\DocumentWorkflow;
 use EWW\Dpf\Security\DocumentVoter;
 use EWW\Dpf\Security\Security;
 use EWW\Dpf\Services\Email\Notifier;
+use EWW\Dpf\Services\Logger\LoggerOld;
 use EWW\Dpf\Session\SearchSessionData;
 use TYPO3\CMS\Core\Messaging\AbstractMessage;
 use TYPO3\CMS\Extbase\Utility\LocalizationUtility;
@@ -226,6 +227,10 @@ class WorkspaceController extends AbstractController
      */
     protected function listWorkspaceAction($checkedDocumentIdentifiers = [])
     {
+        LoggerOld::getLogger(__CLASS__)->error('listWorkspaceAction2', ['document' => "dsfsdf-sadf-45654"]);
+
+        die();
+
         $args = $this->request->getArguments();
         if ($args['refresh']) {
             $workspaceSessionData = $this->session->getWorkspaceData();

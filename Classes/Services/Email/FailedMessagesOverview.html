@@ -1,0 +1,46 @@
+<f:layout name="Default" />
+
+<f:section name="main">
+    <h1>Fehlgeschlagene Nachrichten</h1>
+    
+    <f:if condition="{messages}">
+        <f:then>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Dokument</th>
+                        <th>Funktion</th>
+                        <th>URL</th>
+                        <th>Grund</th>
+                        <th>Aktionen</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <f:for each="{messages}" as="message">
+                        <tr>
+                            <td>{message.document.processNumber}</td>
+                            <td>{message.functionname}</td>
+                            <td>{message.url}</td>
+                            <td>{message.reason}</td>
+                            <td>
+                                <f:link.action 
+                                    action="retry"
+                                    arguments="{message: message}"
+                                    class="btn btn-primary btn-sm"
+                                >
+                                    Wiederholen
+                                </f:link.action>
+                            </td>
+                        </tr>
+                    </f:for>
+                </tbody>
+            </table>
+        </f:then>
+        <f:else>
+            <div class="alert alert-info">
+                Keine fehlgeschlagenen Nachrichten vorhanden.
+            </div>
+        </f:else>
+    </f:if>
+    
+</f:section>
