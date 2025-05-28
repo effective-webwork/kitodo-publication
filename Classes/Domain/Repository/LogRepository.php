@@ -33,67 +33,7 @@ class LogRepository extends Repository
         $querySettings->setRespectStoragePage(false);
         $this->setDefaultQuerySettings($querySettings);
     }
-
-    /**
-     * @param string $requestId
-     * @return array|\TYPO3\CMS\Extbase\Persistence\QueryResultInterface
-     */
-    public function findByRequestId(string $requestId)
-    {
-        $query = $this->createQuery();
-        return $query->matching(
-            $query->equals('request_id', $requestId)
-        )->execute();
-    }
-
-    /**
-     * @param int $level
-     * @return array|\TYPO3\CMS\Extbase\Persistence\QueryResultInterface
-     */
-    public function findByLevel(int $level)
-    {
-        $query = $this->createQuery();
-        return $query->matching(
-            $query->equals('level', $level)
-        )->execute();
-    }
-
-    /**
-     * @param string $component
-     * @return array|\TYPO3\CMS\Extbase\Persistence\QueryResultInterface
-     */
-    public function findByComponent(string $component)
-    {
-        $query = $this->createQuery();
-        return $query->matching(
-            $query->equals('component', $component)
-        )->execute();
-    }
-
-    /**
-     * @param int $limit
-     * @return array|\TYPO3\CMS\Extbase\Persistence\QueryResultInterface
-     */
-    public function findLatestLogs(int $limit = 50)
-    {
-        $query = $this->createQuery();
-        $query->setOrderings(['time_micro' => QueryInterface::ORDER_DESCENDING]);
-        $query->setLimit($limit);
-        return $query->execute();
-    }
-
-    /**
-     * @param array $clientIds
-     * @return array|\TYPO3\CMS\Extbase\Persistence\QueryResultInterface
-     */
-    public function findByClientIds(array $clientIds)
-    {
-        $query = $this->createQuery();
-        return $query->matching(
-            $query->in('client_id', $clientIds)
-        )->execute();
-    }
-
+    
     public function findByFilters(
         string $sortField = 'timeMicro',
         string $sortDirection = 'desc',
