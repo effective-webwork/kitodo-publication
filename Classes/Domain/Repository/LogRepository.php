@@ -102,7 +102,8 @@ class LogRepository extends Repository
         ?float $fromTime = null,
         ?float $toTime = null,
         ?array $clientIds = null,
-        ?int $level = null
+        ?int $level = null,
+        ?int $limit = null
     ): array {
 
         // Map frontend fieldnames to backend fieldnames
@@ -142,6 +143,10 @@ class LogRepository extends Repository
 
         if ($level !== null) {
             $constraints[] = $query->equals('level', $level);
+        }
+
+        if ($limit !== null) {
+            $query->setLimit($limit);
         }
 
         if (count($constraints) > 0) {

@@ -14,24 +14,13 @@ namespace EWW\Dpf\Controller;
  * The TYPO3 project - inspiring people to share!
  */
 
-use EWW\Dpf\Domain\Model\Bookmark;
 use EWW\Dpf\Domain\Model\Client;
-use EWW\Dpf\Domain\Model\Document;
-use EWW\Dpf\Domain\Model\DocumentType;
 use EWW\Dpf\Domain\Model\Log;
-use EWW\Dpf\Helper\DocumentMapper;
-use EWW\Dpf\Services\Api\InternalFormat;
-use EWW\Dpf\Services\ElasticSearch\ElasticSearch;
-use EWW\Dpf\Services\ProcessNumber\ProcessNumberGenerator;
 use TYPO3\CMS\Backend\Utility\BackendUtility;
 use TYPO3\CMS\Backend\View\BackendTemplateView;
 use TYPO3\CMS\Core\Authentication\BackendUserAuthentication;
-use TYPO3\CMS\Core\Log\LogLevel;
-use TYPO3\CMS\Core\Messaging\AbstractMessage;
-use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Mvc\Controller\ActionController;
 use TYPO3\CMS\Extbase\Mvc\View\ViewInterface;
-use TYPO3\CMS\Extbase\Utility\LocalizationUtility;
 
 /**
 * Backend module user/group action controller
@@ -117,7 +106,8 @@ class BackendLogController extends ActionController
         ?string $fromTime = null,
         ?string $toTime = null,
         ?int $clientId = null,
-        ?int $level = null
+        ?int $level = null,
+        ?string $limit = null
     ): void
     {
         $accessibleClients = $this->getAccessibleClients();
@@ -146,7 +136,9 @@ class BackendLogController extends ActionController
             $level = null;
         }
 
-        // \TYPO3\CMS\Extbase\Utility\DebuggerUtility::var_dump($sortDirection);
+        if ($limit === null || !is_numeric($limit) || $limit <= 0) {
+            $limit = 150;
+        }
 
         $logs = $this->logRepository->findByFilters(
             $sortField,
@@ -156,14 +148,13 @@ class BackendLogController extends ActionController
             $fromTimestamp,
             $toTimestamp,
             $clientIds,
-            $level
+            $level,
+            $limit
         );
 
         $this->view->assign('accessibleClients', $accessibleClients);
 
-
-        // $this->logRepository->findByClientIds($clientIds)
-
+        $this->view->assign('limit', $limit);
         $this->view->assign('logs', $logs);
         $this->view->assign('requestId', $requestId);
         $this->view->assign('component', $component);
