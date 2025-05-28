@@ -89,7 +89,7 @@ if (!defined('TYPO3_MODE')) {
     ],
     [
         'access' => 'user,group',
-        'icon' => 'EXT:core/Resources/Public/Icons/T3Icons/mimetypes/mimetypes-open-document-text.svg',
-        'labels' => 'test',
+        'icon' => 'EXT:belog/Resources/Public/Icons/module-belog.svg',
+        'labels' => 'LLL:EXT:dpf/Resources/Private/Language/locallang_mod.xlf:admin_module.logs',
     ]
 );
