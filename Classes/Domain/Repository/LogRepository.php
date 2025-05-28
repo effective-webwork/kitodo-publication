@@ -33,7 +33,7 @@ class LogRepository extends Repository
         $querySettings->setRespectStoragePage(false);
         $this->setDefaultQuerySettings($querySettings);
     }
-    
+
     public function findByFilters(
         string $sortField = 'timeMicro',
         string $sortDirection = 'desc',

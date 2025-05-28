@@ -227,10 +227,6 @@ class WorkspaceController extends AbstractController
      */
     protected function listWorkspaceAction($checkedDocumentIdentifiers = [])
     {
-        LoggerOld::getLogger(__CLASS__)->error('listWorkspaceAction2', ['document' => "dsfsdf-sadf-45654"]);
-
-        die();
-
         $args = $this->request->getArguments();
         if ($args['refresh']) {
             $workspaceSessionData = $this->session->getWorkspaceData();
