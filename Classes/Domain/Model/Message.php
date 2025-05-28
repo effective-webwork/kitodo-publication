@@ -35,6 +35,12 @@ class Message extends AbstractEntity
     protected $reason = '';
 
     /**
+     * @var int
+     */
+    protected $tstamp = 0;
+
+
+    /**
      * Get document
      *
      * @return Document
@@ -133,5 +139,27 @@ class Message extends AbstractEntity
     {
         $this->reason = $reason;
     }
+
+    /**
+     * Get tstamp
+     *
+     * @return int
+     */
+    public function getTstamp(): int
+    {
+        return $this->tstamp;
+    }
+
+    /**
+     * Set tstamp
+     *
+     * @param int $tstamp
+     */
+    public function setTstamp(int $tstamp): void
+    {
+        $this->tstamp = $tstamp;
+    }
+
+
 }
 

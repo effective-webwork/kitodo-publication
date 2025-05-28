@@ -753,11 +753,13 @@ class Notifier
      * @param string $body
      * @param string $functionName
      * @param string $reason
+     * @param bool   $retry
+     * @return bool
      * @throws ConnectionErrorException
      */
     protected function sendActiveMessage(
-        Document $document, string $url, string $body, string $functionName, string $reason = ""
-    )
+        Document $document, string $url, string $body, string $functionName, string $reason = "", $retry = false
+    ): bool
     {
         /** @var Client $client */
         $client = $this->clientRepository->findAll()->current();
@@ -765,7 +767,7 @@ class Notifier
         try {
             $documentType = $this->documentTypeRepository->findOneByUid($document->getDocumentType());
             $args = $this->getMailMarkerArray($document, $client, $documentType, $reason);
-throw new \Exception('test');
+
             if ($url) {
 
                 $request = Request::post($url);
@@ -785,8 +787,21 @@ throw new \Exception('test');
                         )
                     );
                 }
+
+                return true;
             }
+
+            return false;
+
         } catch (\Exception $e) {
+            /** @var $logger \TYPO3\CMS\Core\Log\Logger */
+            $logger = GeneralUtility::makeInstance(LogManager::class)->getLogger(__CLASS__)->info(
+                $functionName." sent",
+                [
+                    'document' => $document->getProcessNumber()
+                ]
+            );
+
             /** @var $logger \TYPO3\CMS\Core\Log\Logger */
             $logger = GeneralUtility::makeInstance(LogManager::class)->getLogger(__CLASS__)->error(
                 $functionName." failed: " . $e->getMessage(),
@@ -795,7 +810,12 @@ throw new \Exception('test');
                     'exception' => $e->getMessage()
                 ]
             );
-           $this->saveFailedMessage($document, $url, $body, $functionName, $reason);
+
+            if (!$retry) {
+                $this->saveFailedMessage($document, $url, $body, $functionName, $reason);
+            }
+
+           return false;
         }
     }
 
@@ -808,36 +828,31 @@ throw new \Exception('test');
     public function retryActiveMessage(Message $message)
     {
         try {
-            $this->sendActiveMessage(
-                $message->getDocument(),
-                $message->getUrl(),
-                $message->getBody(),
-                $message->getFunctionname(),
-                $message->getReason()
-            );
+            if (
+                $this->sendActiveMessage(
+                    $message->getDocument(),
+                    $message->getUrl(),
+                    $message->getBody(),
+                    $message->getFunctionname(),
+                    $message->getReason(),
+                    true
+            )) {
+                // Delete from DB if sending was successful.
+                $this->messageRepository->remove($message);
+                $this->persistenceManager->persistAll();
+                return true;
+            }
 
-            // Delete from DB if sending was successful.
-            $this->messageRepository->remove($message);
-            $this->persistenceManager->persistAll();
-
-            return true;
+            return false;
 
         } catch (\Exception $e) {
             /** @var $logger \TYPO3\CMS\Core\Log\Logger */
             $logger = GeneralUtility::makeInstance(LogManager::class)->getLogger(__CLASS__)->error(
-                $functionName." failed: " . $e->getMessage(),
+                "Retry: " . $message->getFunctionname()." failed: " . $e->getMessage(),
                 [
-                    'document' => $document->getProcessNumber(),
+                    'document' => $message->getDocument()->getProcessNumber(),
                     'exception' => $e->getMessage()
                 ]
-            );
-
-            $this->saveFailedMessage(
-                $message->getDocument(),
-                $message->getUrl(),
-                $message->getBody(),
-                $message->getFunctionname(),
-                $message->getReason()
             );
 
             return false;

@@ -20,7 +20,13 @@ use TYPO3\CMS\Extbase\Persistence\Repository;
 /**
  * Repository for the Message model
  */
-class MessageRepository extends AbstractRepository
+class MessageRepository extends  \TYPO3\CMS\Extbase\Persistence\Repository
 {
+    public function findAll()
+    {
+        $query = $this->createQuery();
+        $query->setOrderings(array('tstamp' => \TYPO3\CMS\Extbase\Persistence\QueryInterface::ORDER_DESCENDING));
+        return $query->execute();
+    }
 
 }

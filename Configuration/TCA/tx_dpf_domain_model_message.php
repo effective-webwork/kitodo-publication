@@ -8,6 +8,10 @@ return [
         'tstamp' => 'tstamp',
         'crdate' => 'crdate',
         'cruser_id' => 'cruser_id',
+        'delete' => 'deleted',
+        'enablecolumns' => [
+            'disabled' => 'hidden',
+        ],
         'default_sortby' => 'ORDER BY crdate DESC',
         'iconfile' => 'EXT:my_extension/Resources/Public/Icons/tx_dpf_domain_model_message.svg',
     ],
@@ -64,5 +68,10 @@ return [
                 'max' => 255,
             ]
         ],
+        'tstamp' => array(
+            'config' => array(
+                'type' => 'passthrough',
+            )
+        ),
     ],
 ];

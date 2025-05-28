@@ -144,6 +144,7 @@ $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['scheduler']['tasks']['EWW\Dpf\Tasks\F
         'Search'           => 'search, extendedSearch, batch, batchBookmark, doubletCheck, latest',
         'User'             => 'settings, saveSettings',
         'DataServiceAjax'  => 'searchGndKeyword, autocomplete',
+        'Message'          => 'list, retry, remove',
     ),
     // non-cacheable actions
     array(
@@ -169,6 +170,7 @@ $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['scheduler']['tasks']['EWW\Dpf\Tasks\F
         'Search'           => 'search, extendedSearch, batch, batchBookmark, doubletCheck, latest',
         'User'             => 'settings, saveSettings',
         'DataServiceAjax'  => 'searchGndKeyword, autocomplete',
+        'Message'          => 'list, retry, remove',
     )
 );
 
