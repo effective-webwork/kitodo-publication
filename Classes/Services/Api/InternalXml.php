@@ -148,12 +148,19 @@ class InternalXml
 
         if ($group->getMainNode()) {
             $nodes = $xpath->query(trim($fieldMapping, "/"), $group->getMainNode());
+
             if ($nodes->length - $fieldIndex > 0) {
+                if (trim($fieldMapping, "/") === '.') {
+                    return $nodes->item($fieldIndex)->firstChild;
+                }
                 return $nodes->item($fieldIndex);
             } else {
                 if ($group->getExtensionNode()) {
                     $extensionNodes = $xpath->query(trim($fieldMapping, "/"), $group->getExtensionNode());
                     if ($extensionNodes->length - $fieldIndex > 0) {
+                        if (trim($fieldMapping, "/") === '.') {
+                            return $extensionNodes->item($fieldIndex)->firstChild;
+                        }
                         return $extensionNodes->item($fieldIndex);
                     }
                 }
@@ -236,11 +243,20 @@ class InternalXml
                 // since it is about child elements that are then added to the overall XML.
                 libxml_use_internal_errors(true);
                 $dom = new DOMDocument();
-                $domLoaded = $dom->loadXML($fragment);
+                $fieldNode = null;
+                if (trim($fieldMapping) === '.') {
+                    $fieldNode = $dom->createTextNode($fragment);
+                } else {
+                    $domLoaded = $dom->loadXML($fragment);
+                    if ($domLoaded) {
+                        $fieldNode = $dom->firstChild;
+                    }
+                }
                 libxml_use_internal_errors(false);
 
-                if ($domLoaded) {
-                    $newField = $this->xml->importNode($dom->firstChild, true);
+                if ($fieldNode instanceof DOMNode) {
+
+                    $newField = $this->xml->importNode($fieldNode, true);
 
                     if ($metadataObject->getModsExtension()) {
                         if ($group->getExtensionNode()) {
