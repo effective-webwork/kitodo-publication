@@ -364,7 +364,7 @@ class ApiController extends ActionController
             } catch (InvalidJson $throwable) {
                 return '{"failed": "'.$throwable->getMessage().'"}';
             } catch (\Throwable $throwable) {
-                return '{"error": "Invalid data in parameter json."}';
+                return '{"error": "Edit document failed: Invalid data in parameter json."}';
             }
 
             $editOrigDocument->setCreator($this->frontendUser->getUid());

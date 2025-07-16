@@ -414,21 +414,23 @@ class InternalXml
      */
     protected function removeNode(DOMNode $node, string $outerNode)
     {
-        $innerGroupNode = $node;
         $outerGroupNode = $node;
         $parentNode = $node->parentNode;
         while ($parentNode && $parentNode->nodeName != trim($outerNode, '/')) {
-            $innerGroupNode = $outerGroupNode;
             $outerGroupNode = $parentNode;
             $parentNode = $outerGroupNode->parentNode;
         }
 
-        $innerGroupNode->parentNode->removeChild($innerGroupNode);
+        $parentNode->removeChild($outerGroupNode);
 
-        if (!$outerGroupNode->hasChildNodes()) {
-            if ($outerGroupNode->nodeName != $innerGroupNode->nodeName) {
-                $this->xml->documentElement->removeChild($outerGroupNode);
-            }
+        /*
+        We may need the following to remove empty nodes:
+
+        while (!$parentNode->hasChildNodes()) {
+            $oldParentNode = $parentNode;
+            $parentNode = $parentNode->parentNode;
+            $parentNode->removeChild($oldParentNode);
         }
+        */
     }
 }
