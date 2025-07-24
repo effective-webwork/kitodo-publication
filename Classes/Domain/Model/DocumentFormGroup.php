@@ -52,6 +52,29 @@ class DocumentFormGroup extends AbstractFormElement
      */
     protected $id = '';
 
+
+    /**
+     * @param MetadataGroup|null $metadataGroup
+     */
+    public function __construct(MetadataGroup $metadataGroup = null)
+    {
+        if ($metadataGroup) {
+            $this->setUid($metadataGroup->getUid());
+            $this->setDisplayName($metadataGroup->getDisplayName());
+            $this->setName($metadataGroup->getName());
+            $this->setMandatory($metadataGroup->getMandatory());
+
+            $this->setAccessRestrictionRoles($metadataGroup->getAccessRestrictionRoles());
+
+            $this->setInfoText($metadataGroup->getInfoText());
+            $this->setGroupType($metadataGroup->getGroupType());
+            $this->setMaxIteration($metadataGroup->getMaxIteration());
+
+            $this->setOptionalGroups($metadataGroup->getOptionalGroups());
+            $this->setRequiredGroups($metadataGroup->getRequiredGroups());
+        }
+    }
+
     /**
      * Returns the infoText
      *
