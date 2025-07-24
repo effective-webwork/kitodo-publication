@@ -88,34 +88,35 @@ class JsonToDocumentMapper
 
         $documentGroupsToRemove = [];
 
-        foreach (['update', 'add', 'remove'] as $action) {
-            foreach ($metaData as $group) {
+        foreach ($metaData as $group) {
 
-                /** @var MetadataGroup $metaDataGroup */
-                $metadataGroup = $this->metadataGroupRepository->findByUid($group['metadataGroup']);
-                $jsonGroupName = $group['jsonGroupName'];
+            /** @var MetadataGroup $metaDataGroup */
+            $metadataGroup = $this->metadataGroupRepository->findByUid($group['metadataGroup']);
+            $jsonGroupName = $group['jsonGroupName'];
 
-                foreach ($group['items'] as $groupItem) {
-                    if (array_key_exists('_action', $groupItem) && $groupItem['_action'] === $action) {
-                        switch ($groupItem['_action']) {
-                            case 'update':
-                                $this->updateDocumentFormGroup($documentForm, $metadataGroup, $jsonGroupName, $groupItem);
-                                break;
+            foreach ($group['items'] as $groupItem) {
 
-                            case 'add':
-                                $this->addDocumentFormGroup($documentForm, $metadataGroup, $jsonGroupName, $groupItem);
-                                break;
+                $action = $groupItem['_action'];
 
-                            case 'remove':
-                                if (array_key_exists('_index', $groupItem)) {
-                                    $groupIndex = (int)$groupItem['_index'];
-                                    $documentGroup = $this->findDocumentGroup($documentForm, $metadataGroup, $jsonGroupName, $groupIndex);
-                                    if ($documentGroup) {
-                                        $documentGroupsToRemove[$groupIndex] = $documentGroup;
-                                    }
+                if (array_key_exists('_action', $groupItem) && in_array($action, ['remove', 'update', 'add'])) {
+                    switch ($groupItem['_action']) {
+                        case 'update':
+                            $this->updateDocumentFormGroup($documentForm, $metadataGroup, $jsonGroupName, $groupItem);
+                            break;
+
+                        case 'add':
+                            $this->addDocumentFormGroup($documentForm, $metadataGroup, $jsonGroupName, $groupItem);
+                            break;
+
+                        case 'remove':
+                            if (array_key_exists('_index', $groupItem)) {
+                                $groupIndex = (int)$groupItem['_index'];
+                                $documentGroup = $this->findDocumentGroup($documentForm, $metadataGroup, $jsonGroupName, $groupIndex);
+                                if ($documentGroup) {
+                                    $documentGroupsToRemove[$groupIndex] = $documentGroup;
                                 }
-                                break;
-                        }
+                            }
+                            break;
                     }
                 }
             }
@@ -647,39 +648,38 @@ class JsonToDocumentMapper
             $metadataObject = $this->metadataObjectRepository->findByUid($object['metadataObject']);
             $jsonFieldName = $object['jsonObjectName'];
 
-            //$fieldMapping = trim($metadataObject->getMapping(), " /");
             $fieldsToRemove = [];
 
-            foreach (['update', 'add', 'remove'] as $action) {
-                if (!isset($object['items']) || !is_array($object['items'])) {
+            if (!isset($object['items']) || !is_array($object['items'])) {
+                continue;
+            }
+
+            foreach ($object['items'] as $objectItem) {
+
+                $action = $objectItem['_action'];
+
+                if (!array_key_exists('_action', $objectItem) || !in_array($objectItem['_action'], ['remove', 'update', 'add'])) {
                     continue;
                 }
 
-                foreach ($object['items'] as $objectItem) {
+                switch ($action) {
+                    case 'update':
+                        $this->updateDocumentFormField($documentFormGroup, $metadataObject, $jsonFieldName, $objectItem);
+                        break;
 
-                    if (!array_key_exists('_action', $objectItem) || $objectItem['_action'] !== $action) {
-                        continue;
-                    }
+                    case 'add':
+                        $this->addDocumentFormField($documentFormGroup, $metadataObject, $jsonFieldName, $objectItem);
+                        break;
 
-                    switch ($action) {
-                        case 'update':
-                            $this->updateDocumentFormField($documentFormGroup, $metadataObject, $jsonFieldName, $objectItem);
-                            break;
-
-                        case 'add':
-                            $this->addDocumentFormField($documentFormGroup, $metadataObject, $jsonFieldName, $objectItem);
-                            break;
-
-                        case 'remove':
-                            if (array_key_exists('_index', $objectItem) && is_numeric($objectItem['_index'])) {
-                                $fieldIndex = (int)$objectItem['_index'];
-                                $documentFormField = $this->findDocumentFormField($documentFormGroup, $metadataGroup, $jsonFieldName, $fieldIndex);
-                                if ($documentFormField) {
-                                    $fieldsToRemove[$fieldIndex] = $documentFormField;
-                                }
+                    case 'remove':
+                        if (array_key_exists('_index', $objectItem) && is_numeric($objectItem['_index'])) {
+                            $fieldIndex = (int)$objectItem['_index'];
+                            $documentFormField = $this->findDocumentFormField($documentFormGroup, $metadataGroup, $jsonFieldName, $fieldIndex);
+                            if ($documentFormField) {
+                                $fieldsToRemove[$fieldIndex] = $documentFormField;
                             }
-                            break;
-                    }
+                        }
+                        break;
                 }
             }
 
