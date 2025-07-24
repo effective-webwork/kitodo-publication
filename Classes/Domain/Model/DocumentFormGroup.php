@@ -239,11 +239,9 @@ class DocumentFormGroup extends AbstractFormElement
     {
             if ($fieldChange->isAdded()) {
                 foreach ($this->getItems() as $keyField => $valueField) {
-                    foreach ($valueField as $keyRepeatField => $valueRepeatField) {
-                        if ($keyField === $fieldChange->getNewField()->getUid()) {
-                            $this->addItem($fieldChange->getNewField());
-                            return;
-                        }
+                    if ($keyField === $fieldChange->getNewField()->getUid()) {
+                        $this->addItem($fieldChange->getNewField());
+                        return;
                     }
                 }
             } elseif ($fieldChange->isDeleted()) {
